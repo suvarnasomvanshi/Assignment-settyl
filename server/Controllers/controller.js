@@ -38,6 +38,9 @@ export const signIn = async(req,res,next)=>{
 
 
 
+
+
+
 export const login = async(req,res,next)=>{
     const {email,password} = req.body;
 
@@ -45,7 +48,7 @@ export const login = async(req,res,next)=>{
 
     try{
         existingUser = User.findOne({email:email})
-    }catch(err){
+    }catch(error){
         console.log(error)
     }
 
@@ -57,12 +60,68 @@ export const login = async(req,res,next)=>{
     if(!isPasswordCorrect){
         return res.status(400).json({message: "Invalid email /Password"})
     }
+    
+    const token = jwt.sign(
+        {id: existingUser._id},
+        JWT_SECRET_KEY,
+        {expiresIn:'30s'}
+    )
 
-
-
+    res.cookie(
+        String(existingUser._id),
+        token,
+        {
+            path:'/',
+            expires: new Date(Date.now() + 1000*30),
+            httpOnly:true,
+            sameSite:'lax',
+        }
+    )
     return res.status(200).json({message:"succesfully login", user:existingUser,token});
 }
 
+
+export const verifytoken = (req,res,next)=>{
+
+    const cookies = req.headers.cookie;
+    const token = cookies.split('=')[1];
+    console.log(token);
+
+    if(!token){
+        res.status(404).json({message:"no token found"});
+    }
+
+    jwt.verify(String(token),JWT_SECRET_KEY,(err,user)=>{
+        if(err){
+            return res.status(400).json({message:'Invalid token'});
+        }
+        console.log(user.id);
+    });
+
+    next();
+
+}
+
+
+export const getUser = async (req, res, next) => {
+    const userId = req.id;
+    let user;
+    try {
+      user = await User.findById(userId, "-password");
+    } catch (err) {
+      return new Error(err);
+    }
+    if (!user) {
+      return res.status(404).json({ message: "User not find" });
+    }
+    return res.status(200).json({ user });
+  };
+
+
+
+
+
+  
 
 export const itemList = (req,res,next)=>{
 
