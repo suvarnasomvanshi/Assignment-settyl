@@ -6,7 +6,7 @@ const Headers = () => {
 
   return (
     <div>
-          <AppBar>
+          <AppBar position='sticky'>
             <Toolbar>
                 <Typography variant="h4">MarketPlace</Typography>
                 <Box sx={{
