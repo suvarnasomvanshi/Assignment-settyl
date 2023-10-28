@@ -1,13 +1,11 @@
 import { useState } from 'react'
-
+import Headers from './assets/Headers'
 
 function App() {
- 
-
+  
   return (
     <>
-    <div>wsdhwuy</div>
-    
+        <div><Headers/></div>
     </>
   )
 }
