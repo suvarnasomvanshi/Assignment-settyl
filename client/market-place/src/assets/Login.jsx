@@ -2,9 +2,12 @@ import { TextField, Box, Button, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authActions } from "./store/index";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [inputs, setInputs] = useState({
     email: "",
@@ -25,15 +28,15 @@ const Login = () => {
         password: inputs.password,
       })
       .catch((err) => console.log(err));
-
-    const data = await res.data;
-    console.log(data);
-    return data;
+      const data = await res.data;
+      return data;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    sendRequest().then(() => navigate("/home"));
+    sendRequest()
+    .then(() => dispatch(authActions.login()))
+    .then(() => navigate("/user"));
   };
 
   return (

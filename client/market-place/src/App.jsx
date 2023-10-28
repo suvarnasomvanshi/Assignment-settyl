@@ -4,10 +4,13 @@ import Headers from './assets/Headers';
 import Login from "./assets/Login";
 import Signup from './assets/Signup';
 import Home from "./assets/Home";
-
+import { useSelector } from "react-redux";
 
 
 function App() {
+
+  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  console.log(isLoggedIn);
   
   return (
     <>
@@ -19,7 +22,8 @@ function App() {
           <Routes>
             <Route  path="/login" element={<Login/>} />
             <Route  path="/" element={<Signup/>} />
-             <Route  path="/home" element={<Home/>} />
+            {isLoggedIn && <Route path="/user" element={<Home/>} />}{" "}
+
             {/*<Route  path="/login" element={<Login/>} />
             <Route  path="/login" element={<Login/>} />
             <Route  path="/login" element={<Login/>} /> */}

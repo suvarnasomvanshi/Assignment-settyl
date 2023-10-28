@@ -8,7 +8,7 @@ const Home = () => {
 
   const sendRequest = async () => {
     const res = await axios
-      .get("http://localhost:5000/api/user", { withCredentials: true })
+      .get("http://localhost:8000/api/user", { withCredentials: true })
       .catch((err) => console.log(err));
 
     const data = await res.data;

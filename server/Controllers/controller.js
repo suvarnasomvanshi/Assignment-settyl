@@ -66,7 +66,7 @@ export const login = async(req,res,next)=>{
     const token = jwt.sign(
         {id: existingUser._id},
         JWT_SECRET_KEY,
-        {expiresIn:'30s'}
+        {expiresIn:'60s'}
     )
 
     res.cookie(
