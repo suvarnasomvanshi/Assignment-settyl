@@ -47,6 +47,7 @@ const Login = () => {
           width={300}
           marginLeft="auto"
           marginRight="auto"
+          marginTop={5}
         >
           <Typography variant="h3">login</Typography>
 
