@@ -19,8 +19,8 @@ const Headers = () => {
                     textColor='inherit'
                     indicatorColor='secondary'
                     >
-                        <Tab label="Login" to="/login" LinkComponent={Link}/>
                         <Tab label="SignUp" to="/" LinkComponent={Link}/>
+                        <Tab label="Login" to="/login" LinkComponent={Link}/>
                         <Tab label="Home" to="/home" LinkComponent={Link} />
                     </Tabs>
                 </Box>
