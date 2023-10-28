@@ -2,39 +2,41 @@ import User from "../Model/model";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+const JWT_SECRET_KEY = "MyKey";
 
 
-export const signIn = async(req,res,next)=>{
-   
-    const {name,email,password} = req.body;
-
+export const signUp = async (req, res, next) => {
+    const { name, email, password } = req.body;
+  
     let existingUser;
-    try{
-         existingUser = await User.findOne({email:email})
-    }catch(error){
-        console.log(error)
+    try {
+      existingUser = await User.findOne({ email: email }); 
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ message: "Internal Server Error" }); 
     }
-
-    if(existingUser){
-        return res.status(400).json({message: "User already exist.Login insteat of signin"})
+  
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
     }
-
-    const hasedPassword = bcrypt.hashSync(password);
-
+  
+    const hashedPassword = bcrypt.hashSync(password, 8); 
+  
     const user = new User({
-        name,
-        email,
-        password:hasedPassword,
+      name,
+      email,
+      password: hashedPassword,
+  
     });
-
-    try{
-        await user.save();
-    }catch(error){
-        console.log(error)
+  
+    try {
+      await user.save();
+      return res.status(201).json({ message: "User created successfully" });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ message: "Internal Server Error" });
     }
-    return res.status(201).json({message:user})
-}
-
+  };
 
 
 
@@ -47,7 +49,7 @@ export const login = async(req,res,next)=>{
     let existingUser;
 
     try{
-        existingUser = User.findOne({email:email})
+        existingUser = await User.findOne({email:email})
     }catch(error){
         console.log(error)
     }
@@ -64,7 +66,7 @@ export const login = async(req,res,next)=>{
     const token = jwt.sign(
         {id: existingUser._id},
         JWT_SECRET_KEY,
-        {expiresIn:'30s'}
+        {expiresIn:'60s'}
     )
 
     res.cookie(
@@ -72,7 +74,7 @@ export const login = async(req,res,next)=>{
         token,
         {
             path:'/',
-            expires: new Date(Date.now() + 1000*30),
+            expires: new Date(Date.now() + 1000*60),
             httpOnly:true,
             sameSite:'lax',
         }
@@ -81,26 +83,35 @@ export const login = async(req,res,next)=>{
 }
 
 
+
+
+
+
+
 export const verifytoken = (req,res,next)=>{
 
-    const cookies = req.headers.cookie;
-    const token = cookies.split('=')[1];
-    console.log(token);
+     const cookies = req.headers.cookie;
+     const token = cookies.split("=")[1];
+     console.log(token)
 
+    
     if(!token){
         res.status(404).json({message:"no token found"});
     }
 
     jwt.verify(String(token),JWT_SECRET_KEY,(err,user)=>{
         if(err){
-            return res.status(400).json({message:'Invalid token'});
+         return res.status(400).json({message:'Invalid token'});
         }
-        console.log(user.id);
-    });
+        req.id = user.id;
+        console.log(user.id);      
+      });
 
-    next();
+
+   next();
 
 }
+
 
 
 export const getUser = async (req, res, next) => {
@@ -114,7 +125,7 @@ export const getUser = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: "User not find" });
     }
-    return res.status(200).json({ user });
+    return res.status(200).json({user});
   };
 
 
