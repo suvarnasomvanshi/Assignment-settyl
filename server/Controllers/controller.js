@@ -69,6 +69,10 @@ export const login = async(req,res,next)=>{
         {expiresIn:'60s'}
     )
 
+    if (req.cookies[`${existingUser._id}`]) {
+      req.cookies[`${existingUser._id}`] = "";
+    }
+
     res.cookie(
         String(existingUser._id),
         token,
@@ -129,6 +133,38 @@ export const getUser = async (req, res, next) => {
   };
 
 
+
+
+  const refreshToken = (req, res, next) => {
+    const cookies = req.headers.cookie;
+    const prevToken = cookies.split("=")[1];
+    if (!prevToken) {
+      return res.status(400).json({ message: "Couldn't find token" });
+    }
+    jwt.verify(String(prevToken), process.env.JWT_SECRET_KEY, (err, user) => {
+      if (err) {
+        console.log(err);
+        return res.status(403).json({ message: "Authentication failed" });
+      }
+      res.clearCookie(`${user.id}`);
+      req.cookies[`${user.id}`] = "";
+  
+      const token = jwt.sign({ id: user.id }, JWT_SECRET_KEY, {
+        expiresIn: "60s",
+      });
+      console.log("Regenerated Token\n", token);
+  
+      res.cookie(String(user.id), token, {
+        path: "/",
+        expires: new Date(Date.now() + 1000 * 60), 
+        httpOnly: true,
+        sameSite: "lax",
+      });
+  
+      req.id = user.id;
+      next();
+    });
+  };
 
 
 
