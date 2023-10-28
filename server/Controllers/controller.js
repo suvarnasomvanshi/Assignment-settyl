@@ -51,7 +51,7 @@ export const login = async(req,res,next)=>{
     try{
         existingUser = await User.findOne({email:email})
     }catch(error){
-        console.log(error)
+      return new Error(error);
     }
 
     if(!existingUser){
@@ -66,7 +66,7 @@ export const login = async(req,res,next)=>{
     const token = jwt.sign(
         {id: existingUser._id},
         JWT_SECRET_KEY,
-        {expiresIn:'60s'}
+        {expiresIn:'30s'}
     )
 
     res.cookie(
