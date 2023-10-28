@@ -1,5 +1,6 @@
-import React,{useState} from 'react'
-import {AppBar,Toolbar,Typography,Box, Tabs, Tab} from "@mui/material"
+import React,{useState} from 'react';
+import {AppBar,Toolbar,Typography,Box, Tabs, Tab} from "@mui/material";
+import { Link } from 'react-router-dom';
 
 const Headers = () => {
     const [value,setValue] = useState();
@@ -18,9 +19,9 @@ const Headers = () => {
                     textColor='inherit'
                     indicatorColor='secondary'
                     >
-                        <Tab label="Login" />
-                        <Tab label="SignUp" />
-                        <Tab label="Logint" />
+                        <Tab label="Login" to="/login" LinkComponent={Link}/>
+                        <Tab label="SignUp" to="/" LinkComponent={Link}/>
+                        <Tab label="Home" to="/home" LinkComponent={Link} />
                     </Tabs>
                 </Box>
             </Toolbar>
