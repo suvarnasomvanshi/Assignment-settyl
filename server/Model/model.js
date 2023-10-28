@@ -56,7 +56,6 @@ const userSchema = new Schema({
     transctionhistory:[{
         date:{
             type:Date,
-            required: true,
         },
         description :String,
         amount: Number,
