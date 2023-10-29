@@ -1,7 +1,7 @@
 import User from "../Model/model";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+import mongoose from "mongoose";
 const JWT_SECRET_KEY = "MyKey";
 
 
@@ -107,7 +107,6 @@ export const verifytoken = (req,res,next)=>{
         console.log(user.id);      
       });
 
-
    next();
 
 }
@@ -197,7 +196,6 @@ export const AdditemList = async(req,res,next)=>{
   }
 
   const newItem = {
-    id:item.id,
     name:item.name,
     quantity:item.quantity,
     price:item.price,
@@ -208,7 +206,7 @@ export const AdditemList = async(req,res,next)=>{
   try{
     await existingUser.save();
   }catch(err){
-    return res.status(500).json({message:'error occur during addin item'})
+    return res.status(500).json({message:'error occur during adding item'})
   }
 
   res.status(201).json({message:"Item added successfully"})
@@ -244,17 +242,13 @@ export const Allproduct = async(req,res,next)=>{
     res.status(500).json({ message: "Error fetching products" });
   }
 
-
-
 }
 
 
 
-
-
-
-
+// itemId is itemList[{object id}]
 export const auctionItem = async(req,res,next)=>{
+  
   const {_id,itemId} = req.body; 
 
   let existingUser;
@@ -268,18 +262,25 @@ export const auctionItem = async(req,res,next)=>{
         return res.status(400).json({ message: "User not found" });
     }
     
-    const selectedItem = existingUser.itemList.find(item => item.id === itemId)
-   
-    if(!selectedItem){
-      return res.status(400).json({message:"Item not found in itemList"})
-    }
 
-    if (selectedItem.isAuctioned) {
-      return res.status(400).json({ message: "Item is already in auction" });
+    let foundItem = false;
+
+  // Loop through the itemList array and find the item with the matching _id
+  for (let i = 0; i < existingUser.itemList.length; i++) {
+    const item = existingUser.itemList[i];
+    if (item._id.equals(itemId)) {
+      if (item.isAuctioned) {
+        return res.status(400).json({ message: 'Item is already in auction' });
+      }
+      item.isAuctioned = true;
+      foundItem = true;
+      break;
+    }
   }
-   
-    selectedItem.isAuctioned = true;
-    existingUser.auctionItem = selectedItem;
+
+  if (!foundItem) {
+    return res.status(400).json({ message: 'Item not found in itemList' });
+  }
 
     try {
       await existingUser.save();
@@ -289,7 +290,41 @@ export const auctionItem = async(req,res,next)=>{
   }
 }
 
-export const ByAuctionItem = (req,res,next)=>{
 
-}
+export const AllauctionItem = async (req, res, next) => {
+  try {
+    const allUsers = await User.find({});
+
+    if (!allUsers || allUsers.length === 0) {
+      return res.status(404).json({ message: 'No users or items found' });
+    }
+
+    let auctionedItemsWithUserDetails = [];
+
+    allUsers.forEach((user) => {
+      if (user.itemList && user.itemList.length > 0) {
+        const auctionedItems = user.itemList.filter(item => item.isAuctioned === true);
+        if (auctionedItems.length > 0) {
+          auctionedItems.forEach((item) => {
+            const itemWithUserDetails = {
+              userId: user._id, // User ID
+              itemId: item._id, // Item ID
+
+            };
+            auctionedItemsWithUserDetails.push(itemWithUserDetails);
+          });
+        }
+      }
+    });
+
+    if (auctionedItemsWithUserDetails.length === 0) {
+      return res.status(404).json({ message: 'No auctioned items available' });
+    }
+
+    res.status(200).json(auctionedItemsWithUserDetails);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching auctioned items' });
+  }
+};
+
 

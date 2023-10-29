@@ -6,9 +6,6 @@ const Schema = mongoose.Schema;
 
 const itemListSchema = new Schema({
 
-    id:{
-        type : Number,
-    },
     name:{
         type:String,
         required:true,

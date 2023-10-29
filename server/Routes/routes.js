@@ -1,5 +1,5 @@
 import express from "express";
-import { signUp,login,getUser,verifytoken,refreshToken,logout,AdditemList,Allproduct,ByAuctionItem,auctionItem} from "../Controllers/controller";
+import { signUp,login,getUser,verifytoken,refreshToken,logout,AdditemList,Allproduct,auctionItem,AllauctionItem} from "../Controllers/controller";
 
 
 const router = express.Router();
@@ -16,9 +16,7 @@ router.get("/allitemlist",Allproduct);
 
 
 router.post("/auctionitem",auctionItem)
-
-
-// router.get("./byauctionitem",ByAuctionItem)
+router.get("/allauctionitem",AllauctionItem)
 
 
 
