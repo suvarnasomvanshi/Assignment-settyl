@@ -1,10 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import AddItem from "./AddItem";
+
 
 axios.defaults.withCredentials = true;
 
 const Home = () => {
   const [user, setUser] = useState();
+  console.log(user)
 
   const sendRequest = async () => {
     const res = await axios

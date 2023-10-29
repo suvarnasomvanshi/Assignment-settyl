@@ -1,5 +1,5 @@
 import express from "express";
-import { signUp,login,getUser,verifytoken,refreshToken,logout} from "../Controllers/controller";
+import { signUp,login,getUser,verifytoken,refreshToken,logout,AdditemList} from "../Controllers/controller";
 
 
 const router = express.Router();
@@ -11,9 +11,7 @@ router.get("/user",verifytoken,getUser)
 router.get("/refresh", refreshToken, verifytoken, getUser);
 router.post("/logout", verifytoken, logout);
 
-
-
-// router.post("./itemlist",itemList);
+router.post("./Additemlist",AdditemList);
 // router.post("./auctionitemtosell",auctionItemToSell)
 
 

@@ -186,8 +186,9 @@ export const getUser = async (req, res, next) => {
 
   
 
-export const itemList = (req,res,next)=>{
-
+export const AdditemList = (req,res,next)=>{
+  const {_id,item} = req.body;
+  
 }
 
 
