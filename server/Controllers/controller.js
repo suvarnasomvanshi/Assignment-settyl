@@ -88,10 +88,6 @@ export const login = async(req,res,next)=>{
 
 
 
-
-
-
-
 export const verifytoken = (req,res,next)=>{
 
      const cookies = req.headers.cookie;
@@ -186,10 +182,76 @@ export const getUser = async (req, res, next) => {
 
   
 
-export const AdditemList = (req,res,next)=>{
+export const AdditemList = async(req,res,next)=>{
   const {_id,item} = req.body;
   
+  let existingUser;
+  try{
+    existingUser = await User.findById({_id})
+  }catch(err){
+    return new err
+  }
+
+  if(!_id){
+    return res.status(400).json({message: "anable to add, user not found"})
+  }
+
+  const newItem = {
+    id:item.id,
+    name:item.name,
+    quantity:item.quantity,
+    price:item.price,
+    image:item.image,
+  }
+
+  existingUser.itemList.push(newItem);
+  try{
+    await existingUser.save();
+  }catch(err){
+    return res.status(500).json({message:'error occur during addin item'})
+  }
+
+  res.status(201).json({message:"Item added successfully"})
+
 }
+
+
+
+export const Allproduct = async(req,res,next)=>{
+     
+  try{
+    const allUsers = await User.find({});
+
+    if(!allUsers){
+      return res.status(404).json({message:'No user exist'})
+    }
+
+    let allproduct=[];
+
+    allUsers.forEach((user)=>{
+      if(user.itemList && user.itemList.length>0){
+        allproduct = allproduct.concat(user.itemList);
+      }
+    })
+
+    if(allproduct.length ===0){
+      return res.status(404).json({message:'No prouct available'})
+    }
+
+    res.status(201).json(allproduct);
+
+  }catch(err){
+    res.status(500).json({ message: "Error fetching products" });
+  }
+
+
+
+}
+
+
+
+
+
 
 
 export const auctionItemToSell = (req,res,next)=>{
@@ -200,6 +262,3 @@ export const auctionItemToBy = (req,res,next)=>{
 
 }
 
-export const Allproduct = (req,res,next)=>{
-
-}
