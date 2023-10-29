@@ -1,5 +1,5 @@
 import express from "express";
-import { signUp,login,getUser,verifytoken,refreshToken,logout,AdditemList,Allproduct} from "../Controllers/controller";
+import { signUp,login,getUser,verifytoken,refreshToken,logout,AdditemList,Allproduct,ByAuctionItem,auctionItem} from "../Controllers/controller";
 
 
 const router = express.Router();
@@ -13,10 +13,12 @@ router.post("/logout", verifytoken, logout);
 
 router.post("/additem",AdditemList);
 router.get("/allitemlist",Allproduct);
-// router.post("./auctionitemtosell",auctionItemToSell)
 
 
-// router.get("./auctionitemtobuy",auctionItemToBy)
+router.post("/auctionitem",auctionItem)
+
+
+// router.get("./byauctionitem",ByAuctionItem)
 
 
 

@@ -25,6 +25,10 @@ const itemListSchema = new Schema({
         type:String,
         required: true,
     },
+    isAuctioned: {
+        type: Boolean,
+        default: false,
+    },
 
 })
 
@@ -49,10 +53,6 @@ const userSchema = new Schema({
         length:8,
     },
     itemList:[itemListSchema],
-
-    auctionItem :{
-      
-    },
     transctionhistory:[{
         date:{
             type:Date,
