@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import {Routes,Route} from "react-router-dom"
-import Headers from './assets/Headers';
-import Login from "./assets/Login";
-import Signup from './assets/Signup';
-import Home from "./assets/Home";
+import Headers from './assets/Pages/Headers';
+import Login from "./assets/Pages/Login";
+import Signup from './assets/Pages/Signup';
+import Home from "./assets/Pages/HomePage/Home";
 import { useSelector } from "react-redux";
 
 

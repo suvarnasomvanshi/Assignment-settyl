@@ -3,11 +3,13 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { authActions } from "./store/index";
+import { authActions } from "../store/index";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  
 
   const [inputs, setInputs] = useState({
     email: "",
@@ -27,6 +29,7 @@ const Login = () => {
         email: inputs.email,
         password: inputs.password,
       })
+
       .catch((err) => console.log(err));
       const data = await res.data;
       return data;
@@ -35,8 +38,21 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     sendRequest()
-    .then(() => dispatch(authActions.login()))
-    .then(() => navigate("/user"));
+    // .then(() => dispatch(authActions.login()))
+    // .then(() => navigate("/user"));
+    .then((datas) => {
+      
+      const data = datas.user
+      if (data && data._id) {
+        dispatch(authActions.login({ userId: data._id })); // Dispatch the login action with userId
+        navigate("/user");
+      } else {
+        console.log("Login failed. Please check your credentials.");
+      }
+    })
+    .catch((error)=>{
+      console.error("Error occurred:", error);
+    })
   };
 
   return (
