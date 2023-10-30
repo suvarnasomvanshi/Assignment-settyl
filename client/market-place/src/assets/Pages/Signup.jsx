@@ -12,6 +12,8 @@ const Signup = () => {
     password: "",
   });
 
+  const [error,setError] = useState()
+
   const handleChange = (e) => {
     setInputs((prev) => ({
       ...prev,
@@ -19,17 +21,24 @@ const Signup = () => {
     }));
   };
 
+ 
+
   const sendRequest = async () => {
-    const res = await axios
-      .post("http://localhost:8000/api/signup", {
+    try {
+      const res = await axios.post("http://localhost:8000/api/signup", {
         name: inputs.name,
         email: inputs.email,
         password: inputs.password,
-      })
-      .catch((err) => console.log(err));
-       const data = await res.data;
-       return data;
+      });
+      const data = res.data;
+      return data;
+    } catch (err) {
+      setError(err); // Handle error setting in state
+      return null; // Return null or handle the error case according to your logic
+    }
   };
+  
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,6 +47,8 @@ const Signup = () => {
 
   return (
    <div>
+
+      
       <form onSubmit={handleSubmit}>
         <Box
           display="flex"
@@ -78,6 +89,8 @@ const Signup = () => {
             value={inputs.password}
             onChange={handleChange}
           />
+
+        
 
           <Button variant="contained" type="submit">
             Signup

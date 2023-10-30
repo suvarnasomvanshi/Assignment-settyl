@@ -21,7 +21,8 @@ const Headers = () => {
                     >
                         <Tab label="SignUp" to="/" LinkComponent={Link}/>
                         <Tab label="Login" to="/login" LinkComponent={Link}/>
-                        <Tab label="Home" to="/home" LinkComponent={Link} />
+                        <Tab label="userDetail" to="/userdetail" LinkComponent={Link} />
+                        
                     </Tabs>
                 </Box>
             </Toolbar>

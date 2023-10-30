@@ -35,16 +35,29 @@ const Login = () => {
       return data;
   };
 
+
+  // const sendRequest = async () => {
+  //   try {
+  //     const res = await axios.post("http://localhost:8000/api/login", {
+  //       email: inputs.email,
+  //       password: inputs.password,
+  //     });
+  //     return res.data; // Return the entire response for further processing
+  //   } catch (err) {
+  //     console.error("Error occurred:", err);
+  //     throw err; // Throw the error to be caught in the calling function
+  //   }
+  // };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     sendRequest()
-    // .then(() => dispatch(authActions.login()))
+    //.then(() => dispatch(authActions.login()))
     // .then(() => navigate("/user"));
-    .then((datas) => {
-      
-      const data = datas.user
-      if (data && data._id) {
-        dispatch(authActions.login({ userId: data._id })); // Dispatch the login action with userId
+    .then((datas) => {    
+      const data = datas.user 
+      if (data) {
+        dispatch(authActions.login({ userDetail: data })); 
         navigate("/user");
       } else {
         console.log("Login failed. Please check your credentials.");
@@ -54,6 +67,23 @@ const Login = () => {
       console.error("Error occurred:", error);
     })
   };
+
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const data = await sendRequest();
+  //     if (data) {
+  //       const user = data.user
+  //       dispatch(authActions.login({ userDetail: user }));
+  //       navigate("/user");
+  //     } else {
+  //       console.log("Login failed. Please check your credentials.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error occurred:", error);
+  //   }
+  // };
 
   return (
     <div>

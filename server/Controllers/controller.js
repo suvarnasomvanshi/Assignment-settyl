@@ -6,6 +6,7 @@ const JWT_SECRET_KEY = "MyKey";
 
 
 export const signUp = async (req, res, next) => {
+  
     const { name, email, password } = req.body;
   
     let existingUser;

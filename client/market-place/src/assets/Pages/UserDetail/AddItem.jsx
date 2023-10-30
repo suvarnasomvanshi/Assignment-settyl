@@ -23,6 +23,9 @@ const AddItem = () => {
   }
 
 
+  
+
+
   const validate = (item)=>{
 
     const error = {};
@@ -56,7 +59,7 @@ const AddItem = () => {
 
     if(Object.keys(newErr).length === 0){
       const item = {itemName, quantity, price, image }
-      const res = await axios.post('http://localhost:8000/api/additem',{item,userId:userId})
+      const res = await axios.post('http://localhost:8000/api/additem',{item,userId})
     }
 
   }
